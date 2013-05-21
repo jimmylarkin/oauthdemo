@@ -14,7 +14,7 @@ using oauthdemo.Models;
 namespace oauthdemo.Controllers
 {
   [Authorize]
-  [InitializeSimpleMembership]
+  //[InitializeSimpleMembership]
   public class AccountController : Controller
   {
     //

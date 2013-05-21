@@ -14,9 +14,9 @@ namespace oauthdemo
       // To let users of this site log in using their accounts from other sites such as Microsoft, Facebook, and Twitter,
       // you must update this site. For more information visit http://go.microsoft.com/fwlink/?LinkID=252166
 
-      //OAuthWebSecurity.RegisterMicrosoftClient(
-      //    clientId: "",
-      //    clientSecret: "");
+      OAuthWebSecurity.RegisterMicrosoftClient(
+          clientId: "00000000400F8C05",
+          clientSecret: "bll3xF4lvpaWQdgrtgL7BP6VpKkzXuD1");
 
       //OAuthWebSecurity.RegisterTwitterClient(
       //    consumerKey: "",
