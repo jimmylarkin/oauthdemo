@@ -29,4 +29,25 @@ else
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+  <script>
+    function boostrapHighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").addClass("error");
+      $(element).trigger('highlated');
+    };
+
+    function boostrapUnhighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").removeClass("error");
+      $(element).trigger('unhighlated');
+    };
+
+    $.validator.setDefaults({
+      ignore: "",
+      highlight: function (element, errorClass, validClass) {
+        boostrapHighlight(element, errorClass, validClass);
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        boostrapUnhighlight(element, errorClass, validClass);
+      }
+    });
+  </script>
 }

@@ -26,13 +26,14 @@
                     </button>
                     <a class="brand" href="#">OAuth Demo</a>
                     <div class="nav-collapse collapse">
+                        
+                            @Html.Partial("_loginPartial")
+                        
                         <ul class="nav">
                             <li @Html.Raw(Url.GetNavClass("Index", "Home"))>@Html.ActionLink("Home", "", "Home")</li>
                             <li @Html.Raw(Url.GetNavClass("About", "Home"))>@Html.ActionLink("About", "About", "Home")</li>
                         </ul>
-                        <ul class="nav pull-right">
-                            <li @Html.Raw(Url.GetNavClass("Login", "Account"))>@Html.ActionLink("Login", "Login", "Account")</li>
-                        </ul>
+
                     </div>
                     <!--/.nav-collapse -->
                 </div>
