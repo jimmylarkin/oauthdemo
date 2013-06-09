@@ -2,33 +2,29 @@
 
 @if (Model.Count > 0)
 {
-    <h3>Registered external logins</h3>
-    <table>
-        <tbody>
-        @foreach (oauthdemo.Models.ExternalLogin externalLogin in Model)
+  <h3>Registered external logins</h3>
+  <ul class="unstyled">
+    @foreach (oauthdemo.Models.ExternalLogin externalLogin in Model)
+    {
+      <li>
+        
+        @if (ViewBag.ShowRemoveButton)
         {
-            <tr>
-                <td>@externalLogin.ProviderDisplayName</td>
-                <td>
-                    @if (ViewBag.ShowRemoveButton)
-                    {
-                        using (Html.BeginForm("Disassociate", "Account"))
-                        {
-                            @Html.AntiForgeryToken()
-                            <div>
-                                @Html.Hidden("provider", externalLogin.Provider)
-                                @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-                                <input type="submit" value="Remove" class="btn btn-small btn-warning" title="Remove this @externalLogin.ProviderDisplayName credential from your account" />
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        @: &nbsp;
-                    }
-                </td>
-            </tr>
+          using (Html.BeginForm("Disassociate", "Account"))
+          {
+          @Html.AntiForgeryToken()
+          <div>
+            @Html.Hidden("provider", externalLogin.Provider)
+            @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
+            <button type="submit" class="btn  btn-danger" title="Remove this @externalLogin.ProviderDisplayName credential from your account">@externalLogin.ProviderDisplayName &nbsp;&nbsp;&nbsp;<i class="icon-trash"></i></button>
+          </div>
+          }
         }
-        </tbody>
-    </table>
+        else
+        {
+          @: &nbsp;
+                    }
+      </li>
+    }
+  </ul>
 }

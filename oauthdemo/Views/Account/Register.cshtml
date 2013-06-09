@@ -1,37 +1,64 @@
 ﻿@model oauthdemo.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+  ViewBag.Title = "Register";
 }
+<span class="span12">
+  <hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+  </hgroup>
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
-</hgroup>
-
-@using (Html.BeginForm()) {
+  @using (Html.BeginForm())
+  {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-error" })
 
     <fieldset>
-        <legend>Registration Form</legend>
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.ConfirmPassword)
-                @Html.PasswordFor(m => m.ConfirmPassword)
-            </li>
-        </ol>
-        <input type="submit" value="Register" />
+      <div class="control-group">
+        @Html.LabelFor(m => m.UserName)
+        <div class="controls">
+          @Html.TextBoxFor(m => m.UserName, new { placeholder = "User name" })
+          @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-inline" })
+        </div>
+      </div>
+      <div class="control-group">
+        @Html.LabelFor(m => m.Password)
+        <div class="controls">
+          @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+          @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-inline" })
+        </div>
+      </div>
+      <div class="control-group">
+        @Html.LabelFor(m => m.ConfirmPassword)
+        <div class="controls">
+          @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm password" })
+          @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "help-inline" })
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
     </fieldset>
-}
-
+  }
+</span>
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/bundles/jqueryval")
+  <script>
+    function boostrapHighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").addClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    function boostrapUnhighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").removeClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    $.validator.setDefaults({
+      ignore: "",
+      highlight: function (element, errorClass, validClass) {
+        boostrapHighlight(element, errorClass, validClass);
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        boostrapUnhighlight(element, errorClass, validClass);
+      }
+    });
+  </script>
 }

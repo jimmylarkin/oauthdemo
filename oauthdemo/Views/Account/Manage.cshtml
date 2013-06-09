@@ -1,34 +1,40 @@
 ﻿@model oauthdemo.Models.LocalPasswordModel
+
 @{
-    ViewBag.Title = "Manage Account";
+  ViewBag.Title = "Manage Account";
 }
+<span class="span12">
+  <hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+  </hgroup>
+</span>
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-</hgroup>
+<span class="span8">
+  <p class="message-success">@ViewBag.StatusMessage</p>
 
-<p class="message-success">@ViewBag.StatusMessage</p>
+  <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
 
-<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
-
-@if (ViewBag.HasLocalPassword)
-{
+  @if (ViewBag.HasLocalPassword)
+  {
     @Html.Partial("_ChangePasswordPartial")
-}
-else
-{ 
+  }
+  else
+  { 
     @Html.Partial("_SetPasswordPartial")
-}
+  }
+</span>
 
-<section id="externalLogins">
+<span class="span4">
+  <section id="externalLogins">
     @Html.Action("RemoveExternalLogins")
 
     <h3>Add an external login</h3>
     @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
-</section>
+  </section>
+</span>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/bundles/jqueryval")
   <script>
     function boostrapHighlight(element, errorClass, validClass) {
       $(element).closest(".control-group").addClass("error");

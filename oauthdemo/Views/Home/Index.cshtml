@@ -1,3 +1,23 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+  ViewBag.Title = "Home Page";
 }
+<span class="span7">
+  <h1>Lorem ipsum</h1>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus arcu ut velit venenatis, ac venenatis risus placerat. Praesent euismod porttitor lacus sit amet elementum. Duis suscipit, justo ut egestas pellentesque, dolor tellus posuere arcu, at ullamcorper mi dui tincidunt libero. Etiam vestibulum, arcu non commodo sodales, dolor odio adipiscing ipsum, placerat volutpat ligula erat ut turpis. Sed massa elit, feugiat ac tincidunt semper, imperdiet malesuada nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin sollicitudin porttitor nisl, sed porttitor nisl gravida ac. Nam placerat gravida nisi, vel convallis velit consequat a. Etiam commodo elit at libero interdum, ac eleifend leo semper. In vestibulum imperdiet erat, at euismod mauris viverra quis. Integer quis tempus nulla. Sed quis massa tristique, fermentum nunc quis, pellentesque ipsum.</p>
+  <p>Nulla volutpat, risus scelerisque facilisis aliquam, libero eros aliquam diam, sit amet hendrerit velit est vitae tellus. Ut ac sapien a ante ullamcorper porttitor. Nam quis magna a dolor viverra condimentum. Nunc condimentum erat sit amet nisi molestie tristique. Pellentesque et eleifend nisi, ac iaculis diam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In lobortis ut ante quis rutrum.</p>
+  <p>Aliquam interdum pulvinar nibh eget luctus. Vivamus fringilla mauris libero, sed tincidunt velit laoreet ac. Quisque sed justo pretium, condimentum enim at, cursus nunc. Nulla facilisi. Cras vitae mi mi. Etiam vel enim blandit, tincidunt eros sed, ultricies nisi. Morbi semper et quam vel pharetra. Mauris varius ante lacus, non dapibus sem accumsan id. Sed volutpat pulvinar ipsum sed ultricies. Cras tempor leo nec mi faucibus scelerisque. Integer ultrices cursus ligula. Aenean eros augue, ultricies eget dolor id, eleifend vehicula arcu. Suspendisse id adipiscing dui. Duis quis dignissim justo. Cras ac odio sed lectus porta sagittis.</p>
+</span>
+<div class="span5">
+  <h1>Member area</h1>
+  @if (!User.Identity.IsAuthenticated)
+  {
+    <div class="alert alert-info">
+      You need to log in to see this area.
+    </div>
+  }
+  else
+  {
+    <div class="alert alert-success"><strong>Hello @User.Identity.Name</strong></div>
+    <p>Here is your private memebr area.</p>
+  }
+</span>

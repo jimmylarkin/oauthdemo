@@ -31,7 +31,6 @@
                         
                         <ul class="nav">
                             <li @Html.Raw(Url.GetNavClass("Index", "Home"))>@Html.ActionLink("Home", "", "Home")</li>
-                            <li @Html.Raw(Url.GetNavClass("About", "Home"))>@Html.ActionLink("About", "About", "Home")</li>
                         </ul>
 
                     </div>
@@ -42,9 +41,7 @@
     </header>
     <div class="container">
         <div class="row">
-            <div class="span9">
                 @RenderBody()
-            </div>
         </div>
     </div>
     @Scripts.Render("~/bundles/jquery")
