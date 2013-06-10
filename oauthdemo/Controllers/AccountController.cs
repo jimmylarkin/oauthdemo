@@ -272,7 +272,7 @@ namespace oauthdemo.Controllers
             // Insert name into the profile table
             db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
             db.SaveChanges();
-
+            int id = WebSecurity.GetUserId(model.UserName);
             OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
             OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
@@ -280,7 +280,7 @@ namespace oauthdemo.Controllers
           }
           else
           {
-            ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+            ModelState.AddModelError("", "User name already exists. Please enter a different user name.");
           }
         }
       }

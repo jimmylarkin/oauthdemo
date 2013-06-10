@@ -18,18 +18,21 @@ namespace oauthdemo.Models
     public DbSet<UserProfile> UserProfiles { get; set; }
   }
 
-  [Table("UserProfile")]
+  [Table("users")]
   public class UserProfile
   {
     [Key]
     [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-    public int UserId { get; set; }
+    [Column("id")]
+    public int UserId { get; set; }   
+
+    [Column("username")]
     public string UserName { get; set; }
   }
 
   public class RegisterExternalLoginModel
   {
-    [Required]
+    [Required(ErrorMessage = "The username is required")]
     [Display(Name = "User name")]
     public string UserName { get; set; }
 
@@ -38,12 +41,12 @@ namespace oauthdemo.Models
 
   public class LocalPasswordModel
   {
-    [Required]
+    [Required(ErrorMessage = "The old password is required")]
     [DataType(DataType.Password)]
     [Display(Name = "Current password")]
     public string OldPassword { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "The new password is required")]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
     [DataType(DataType.Password)]
     [Display(Name = "New password")]

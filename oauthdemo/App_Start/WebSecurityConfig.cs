@@ -10,7 +10,7 @@ namespace oauthdemo
   {
     public static void RegisterWebSecurityProvider()
     {
-      WebSecurity.InitializeDatabaseConnection("DefaultConnection", "users", "id", "name", true);
+      WebSecurity.InitializeDatabaseConnection("DefaultConnection", "users", "id", "username", true);
     }
   }
 }
