@@ -28,6 +28,9 @@ namespace oauthdemo.Models
 
     [Column("username")]
     public string UserName { get; set; }
+
+    [Column("password")]
+    public string Password { get; set; }
   }
 
   public class RegisterExternalLoginModel
