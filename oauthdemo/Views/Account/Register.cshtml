@@ -2,42 +2,50 @@
 @{
   ViewBag.Title = "Register";
 }
-<span class="span12">
-  <hgroup class="title">
-    <h1>@ViewBag.Title</h1>
-  </hgroup>
+<div class="row">
+  <div class="span6">
+    <hgroup class="title">
+      <h1>@ViewBag.Title</h1>
+    </hgroup>
 
-  @using (Html.BeginForm())
-  {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, null, new { @class = "alert alert-error" })
+    @using (Html.BeginForm())
+    {
+      @Html.AntiForgeryToken()
+      @Html.ValidationSummary(true, null, new { @class = "alert alert-error" })
 
-    <fieldset>
-      <div class="control-group">
-        @Html.LabelFor(m => m.UserName)
-        <div class="controls">
-          @Html.TextBoxFor(m => m.UserName, new { placeholder = "User name" })
-          @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-inline" })
+      <fieldset>
+        <div class="control-group">
+          @Html.LabelFor(m => m.UserName)
+          <div class="controls">
+            @Html.TextBoxFor(m => m.UserName, new { placeholder = "User name" })
+            @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-inline" })
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        @Html.LabelFor(m => m.Password)
-        <div class="controls">
-          @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
-          @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-inline" })
+        <div class="control-group">
+          @Html.LabelFor(m => m.Password)
+          <div class="controls">
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-inline" })
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        @Html.LabelFor(m => m.ConfirmPassword)
-        <div class="controls">
-          @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm password" })
-          @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "help-inline" })
+        <div class="control-group">
+          @Html.LabelFor(m => m.ConfirmPassword)
+          <div class="controls">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm password" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "help-inline" })
+          </div>
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary">Register</button>
-    </fieldset>
-  }
-</span>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </fieldset>
+    }
+  </div>
+
+    <div class="span6">
+    <h2>Use another service to log in.</h2>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+  </div>
+</div>
+
 @section Scripts {
   @Scripts.Render("~/bundles/jqueryval")
   <script>
