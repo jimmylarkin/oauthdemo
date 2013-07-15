@@ -112,14 +112,13 @@ namespace oauthdemo.Controllers
       // Only disassociate the account if the currently logged in user is the owner
       if (ownerAccount == User.Identity.Name)
       {
-        // Use a transaction to prevent the user from deleting their last login credential
-        using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+        using (UsersContext db = new UsersContext())
         {
-          bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-          if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count > 1)
+          ExternalLoginProfile externalProfile = db.ExternalLoginProfiles.Include("User").FirstOrDefault(e => e.User.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+          if (externalProfile != null)
           {
-            OAuthWebSecurity.DeleteAccount(provider, providerUserId);
-            scope.Complete();
+            db.ExternalLoginProfiles.Remove(externalProfile);
+            db.SaveChanges();
             message = ManageMessageId.RemoveLoginSuccess;
           }
         }
@@ -138,7 +137,11 @@ namespace oauthdemo.Controllers
           : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
           : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
           : "";
-      ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+      using (UsersContext db = new UsersContext())
+      {
+        UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+        ViewBag.HasLocalPassword = string.IsNullOrEmpty(user.Password);
+      }
       ViewBag.ReturnUrl = Url.Action("Manage");
       return View();
     }
@@ -150,32 +153,32 @@ namespace oauthdemo.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Manage(LocalPasswordModel model)
     {
-      bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+      bool hasLocalAccount = false;
+      using (UsersContext db = new UsersContext())
+      {
+        UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+        hasLocalAccount = string.IsNullOrEmpty(user.Password);
+      }
       ViewBag.HasLocalPassword = hasLocalAccount;
       ViewBag.ReturnUrl = Url.Action("Manage");
       if (hasLocalAccount)
       {
         if (ModelState.IsValid)
         {
-          // ChangePassword will throw an exception rather than return false in certain failure scenarios.
-          bool changePasswordSucceeded;
-          try
+          using (UsersContext db = new UsersContext())
           {
-            changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+            UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            if (user != null && user.Password.Equals(model.OldPassword, StringComparison.OrdinalIgnoreCase))
+            {
+              user.Password = model.NewPassword;
+              db.SaveChanges();
+            }
+            else
+            {
+              ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+            }
           }
-          catch (Exception)
-          {
-            changePasswordSucceeded = false;
-          }
-
-          if (changePasswordSucceeded)
-          {
-            return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-          }
-          else
-          {
-            ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-          }
+          return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
         }
       }
       else
@@ -192,7 +195,12 @@ namespace oauthdemo.Controllers
         {
           try
           {
-            WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
+            using (UsersContext db = new UsersContext())
+            {
+              UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+              user.Password = model.NewPassword;
+              db.SaveChanges();
+            }
             return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
           }
           catch (Exception)
@@ -252,7 +260,7 @@ namespace oauthdemo.Controllers
             db.ExternalLoginProfiles.Add(externalLogin);
             db.SaveChanges();
           }
-        } 
+        }
         return RedirectToLocal(returnUrl);
       }
       else

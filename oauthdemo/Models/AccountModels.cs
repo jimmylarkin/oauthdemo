@@ -15,11 +15,11 @@ namespace oauthdemo.Models
     {
     }
 
-    protected override void OnModelCreating(DbModelBuilder modelBuilder)
-    {
-      modelBuilder.Entity<ExternalLoginProfile>().HasRequired(e => e.User);
-      base.OnModelCreating(modelBuilder);
-    }
+    //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    //{
+    //  modelBuilder.Entity<ExternalLoginProfile>().HasRequired(e => e.User);
+    //  base.OnModelCreating(modelBuilder);
+    //}
 
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<ExternalLoginProfile> ExternalLoginProfiles { get; set; }
