@@ -17,7 +17,6 @@ namespace oauthdemo
     protected void Application_Start()
     {
       AreaRegistration.RegisterAllAreas();
-      WebSecurityConfig.RegisterWebSecurityProvider();
       WebApiConfig.Register(GlobalConfiguration.Configuration);
       FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
       RouteConfig.RegisterRoutes(RouteTable.Routes);

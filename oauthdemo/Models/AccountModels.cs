@@ -15,7 +15,14 @@ namespace oauthdemo.Models
     {
     }
 
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<ExternalLoginProfile>().HasRequired(e => e.User);
+      base.OnModelCreating(modelBuilder);
+    }
+
     public DbSet<UserProfile> UserProfiles { get; set; }
+    public DbSet<ExternalLoginProfile> ExternalLoginProfiles { get; set; }
   }
 
   [Table("users")]
@@ -31,6 +38,27 @@ namespace oauthdemo.Models
 
     [Column("password")]
     public string Password { get; set; }
+  }
+
+  [Table("ExternalLogins")]
+  public class ExternalLoginProfile
+  {
+    [Key]
+    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Column("UserId")]
+    public int? UserId { get; set; }
+
+    [ForeignKey("UserId")]
+    public UserProfile User { get; set; }
+
+    [Column("Provider")]
+    public string Provider { get; set; }
+
+    [Column("ProviderUserId")]
+    public string ProviderUserId { get; set; }
   }
 
   public class RegisterExternalLoginModel

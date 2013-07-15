@@ -35,8 +35,9 @@ namespace oauthdemo.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Login(LoginModel model, string returnUrl)
     {
-      if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+      if (ModelState.IsValid)
       {
+        FormsAuthentication.SetAuthCookie(model.UserName, false);
         return RedirectToLocal(returnUrl);
       }
 
@@ -52,7 +53,7 @@ namespace oauthdemo.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult LogOff()
     {
-      WebSecurity.Logout();
+      FormsAuthentication.SignOut();
 
       return RedirectToAction("Index", "Home");
     }
@@ -79,8 +80,13 @@ namespace oauthdemo.Controllers
         // Attempt to register the user
         try
         {
-          WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-          WebSecurity.Login(model.UserName, model.Password);
+          using (UsersContext db = new UsersContext())
+          {
+            UserProfile user = new UserProfile() { UserName = model.UserName, Password = model.Password };
+            db.UserProfiles.Add(user);
+            db.SaveChanges();
+          }
+          FormsAuthentication.SetAuthCookie(model.UserName, false);
           return RedirectToAction("Index", "Home");
         }
         catch (MembershipCreateUserException e)
@@ -223,15 +229,30 @@ namespace oauthdemo.Controllers
         return RedirectToAction("ExternalLoginFailure");
       }
 
-      if (OAuthWebSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: false))
+      using (UsersContext db = new UsersContext())
       {
-        return RedirectToLocal(returnUrl);
+        ExternalLoginProfile externalLogin = db.ExternalLoginProfiles.Include("User").FirstOrDefault(p => p.Provider.Equals(result.Provider, StringComparison.OrdinalIgnoreCase) && p.ProviderUserId.Equals(result.ProviderUserId, StringComparison.OrdinalIgnoreCase));
+        if (externalLogin != null)
+        {
+          FormsAuthentication.SetAuthCookie(externalLogin.User.UserName, false);
+          return RedirectToLocal(returnUrl);
+        }
       }
 
       if (User.Identity.IsAuthenticated)
       {
         // If the current user is logged in add the new account
-        OAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
+        using (UsersContext db = new UsersContext())
+        {
+          ExternalLoginProfile externalLogin = db.ExternalLoginProfiles.FirstOrDefault(p => p.Provider.Equals(result.Provider, StringComparison.OrdinalIgnoreCase) && p.ProviderUserId.Equals(result.ProviderUserId, StringComparison.OrdinalIgnoreCase));
+          if (externalLogin == null)
+          {
+            UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            externalLogin = new ExternalLoginProfile() { User = user, Provider = result.Provider, ProviderUserId = result.ProviderUserId };
+            db.ExternalLoginProfiles.Add(externalLogin);
+            db.SaveChanges();
+          }
+        } 
         return RedirectToLocal(returnUrl);
       }
       else
@@ -265,17 +286,18 @@ namespace oauthdemo.Controllers
         // Insert a new user into the database
         using (UsersContext db = new UsersContext())
         {
-          UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
+          UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase));
           // Check if user already exists
           if (user == null)
           {
             // Insert name into the profile table
-            db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
+            user = new UserProfile { UserName = model.UserName };
+            db.UserProfiles.Add(user);
+            ExternalLoginProfile externalLogin = new ExternalLoginProfile() { User = user, Provider = provider, ProviderUserId = providerUserId };
+            db.ExternalLoginProfiles.Add(externalLogin);
             db.SaveChanges();
-            int id = WebSecurity.GetUserId(model.UserName);
-            OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-            OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
+            FormsAuthentication.SetAuthCookie(externalLogin.User.UserName, false);
             return RedirectToLocal(returnUrl);
           }
           else
