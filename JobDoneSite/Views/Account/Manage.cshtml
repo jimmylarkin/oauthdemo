@@ -1,0 +1,63 @@
+﻿@model JobDone.Models.LocalPasswordModel
+
+@{
+  ViewBag.Title = "Manage Account";
+}
+<div class="row">
+  <div class="span12">
+    <hgroup class="title">
+      <h1>@ViewBag.Title</h1>
+    </hgroup>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p class="message-success">@ViewBag.StatusMessage</p>
+
+    <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+
+    @if (ViewBag.HasLocalPassword)
+    {
+      @Html.Partial("_ChangePasswordPartial")
+    }
+    else
+    { 
+      @Html.Partial("_SetPasswordPartial")
+    }
+  </div>
+
+  <div class="span4">
+    <section id="externalLogins">
+      @Html.Action("RemoveExternalLogins")
+
+      <h3>Add an external login</h3>
+      @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+    </section>
+  </div>
+</div>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  <script>
+    function boostrapHighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").addClass("error");
+      $(element).trigger('highlated');
+    };
+
+    function boostrapUnhighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").removeClass("error");
+      $(element).trigger('unhighlated');
+    };
+
+    $.validator.setDefaults({
+      ignore: "",
+      highlight: function (element, errorClass, validClass) {
+        boostrapHighlight(element, errorClass, validClass);
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        boostrapUnhighlight(element, errorClass, validClass);
+      }
+    });
+  </script>
+}

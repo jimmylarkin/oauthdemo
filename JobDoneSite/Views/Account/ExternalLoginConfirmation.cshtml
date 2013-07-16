@@ -1,0 +1,60 @@
+﻿@model JobDone.Models.RegisterExternalLoginModel
+@{
+  ViewBag.Title = "Register";
+}
+
+<span class="span6">
+  <hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+  </hgroup>
+
+  <h2>Associate your @ViewBag.ProviderDisplayName account</h2>
+
+  @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+  {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-error" })
+
+    <fieldset>
+      <p>
+        You've successfully authenticated with <strong>@ViewBag.ProviderDisplayName</strong>.
+        Please enter a user name for this site below and click the Confirm button to finish
+        logging in.
+      </p>
+      <div class="control-group">
+        @Html.LabelFor(m => m.UserName)
+        <div class="controls">
+          @Html.TextBoxFor(m => m.UserName, new { placeholder = "User name" })
+          @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-inline" })
+        </div>
+      </div>
+      @Html.HiddenFor(m => m.ExternalLoginData)
+      <button type="submit" class="btn btn-primary">Register</button>
+    </fieldset>
+  }
+</span>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  <script>
+    function boostrapHighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").addClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    function boostrapUnhighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").removeClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    $.validator.setDefaults({
+      ignore: "",
+      highlight: function (element, errorClass, validClass) {
+        boostrapHighlight(element, errorClass, validClass);
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        boostrapUnhighlight(element, errorClass, validClass);
+      }
+    });
+  </script>
+}

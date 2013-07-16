@@ -1,0 +1,64 @@
+﻿@model JobDone.Models.HomeModel
+@{
+    ViewBag.Title = "Job Done";
+}
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="span2">
+            <img src="~/Content/images/icon-200.png" />
+        </div>
+        <div class="span9">
+            <h1>Welcome to Job Done</h1>
+            <p>The best task management website.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="span9">
+            <h1>Your tasks</h1>
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                @Html.TextBoxFor(m => m.TaskDescription, new { @class = "span6", style="margin-right: 20px !important;", placeholder = "Enter task here..." })
+                @Html.TextBoxFor(m => m.TaskEstimation, new { @class = "span2", placeholder = "...and estimate it" })
+                <button type="submit" class="btn btn-primary">Add</button>
+            }
+            @if (Model.Tasks.Count > 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="span5">Task</th>
+                            <th class="span2">Estimated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var task in Model.Tasks)
+                        {
+                            <tr>
+                                <td>@task.Description</td>
+                                <td>@task.Estimation</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>You have no tasks yet. Go ahead and add some.</p>
+            }
+        </div>
+        <div class="span3">
+            <p>Welcome back <strong>@User.Identity.Name</strong></p>
+            <p>You completed <strong>@Model.CompletedCount</strong> tasks @DateTime.Today.AddDays(-2).ToString("dd MMMM").</p>
+            <img src="~/Content/images/icon-200.png" />
+            <p>But there are still <strong>@Model.ToDoCount</strong> tasks to do.</p>
+        </div>
+    </div>
+}
