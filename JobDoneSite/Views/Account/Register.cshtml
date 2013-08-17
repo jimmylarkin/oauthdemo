@@ -1,0 +1,78 @@
+﻿@model JobDone.Models.RegisterModel
+@{
+  ViewBag.Title = "Register";
+}
+<div class="row">
+  <div class="span6">
+    <hgroup class="title">
+      <h1>@ViewBag.Title</h1>
+    </hgroup>
+
+    @using (Html.BeginForm())
+    {
+      @Html.AntiForgeryToken()
+      @Html.ValidationSummary(true, null, new { @class = "alert alert-error" })
+
+      <fieldset>
+        <div class="control-group">
+          @Html.LabelFor(m => m.UserName)
+          <div class="controls">
+            @Html.TextBoxFor(m => m.UserName, new { placeholder = "User name" })
+            @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-inline" })
+          </div>
+        </div>
+        <div class="control-group">
+          @Html.LabelFor(m => m.Password)
+          <div class="controls">
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-inline" })
+          </div>
+        </div>
+        <div class="control-group">
+          @Html.LabelFor(m => m.ConfirmPassword)
+          <div class="controls">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm password" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "help-inline" })
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </fieldset>
+    }
+  </div>
+
+  <div class="span6">
+    <h2>Use your Microsoft Account to log in.</h2>
+    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+      @Html.AntiForgeryToken()
+      <fieldset id="socialLoginList">
+        <button type="submit" name="provider" class="btn btn-success" value="Microsoft" title="Log in using your LiveID account">Log In</button>
+      </fieldset>
+    }
+  </div>
+</div>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  <script>
+    function boostrapHighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").addClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    function boostrapUnhighlight(element, errorClass, validClass) {
+      $(element).closest(".control-group").removeClass("error");
+      $(element).trigger('highlighted');
+    };
+
+    $.validator.setDefaults({
+      ignore: "",
+      highlight: function (element, errorClass, validClass) {
+        boostrapHighlight(element, errorClass, validClass);
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        boostrapUnhighlight(element, errorClass, validClass);
+      }
+    });
+  </script>
+}
