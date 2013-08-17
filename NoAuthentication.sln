@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{07D021
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobDone", "JobDone\JobDone.csproj", "{914763A6-1592-489D-A0A5-1C22A5E5E0CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoAuthentication", "NoAuthentication\NoAuthentication.csproj", "{914763A6-1592-489D-A0A5-1C22A5E5E0CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
