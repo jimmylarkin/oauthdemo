@@ -1,4 +1,4 @@
-oauthdemo
+Master branch of the demo, nothing really here
 =========
 
-OAuth demo application
+
