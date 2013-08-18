@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Login link</Title>
+      <Author>jimmy.larkin@outlook.com</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="html"><![CDATA[            <ul class="nav pull-right">
+              @if (Request.IsAuthenticated)
+              {
+                <li>
+                  <p id="nav-user-name" class="navbar-text pull-right">
+                  Hello, @User.Identity.Name!
+                  </p>
+                </li>
+                <li>@Html.ActionLink("Log off", "Logoff", "Login")</li>
+              }
+              else {
+                <li>@Html.ActionLink("Login", "Login", "Login")</li>
+              }
+            </ul>]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

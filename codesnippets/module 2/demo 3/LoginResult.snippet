@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>LoginResult</Title>
+      <Author>jimmy.larkin@outlook.com</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp"><![CDATA[    internal class LoginResult : ActionResult
+    {
+      public LoginResult( string returnUrl)
+      {
+        Provider = "Microsoft";
+        ReturnUrl = returnUrl;
+      }
+
+      public string Provider { get; private set; }
+      public string ReturnUrl { get; private set; }
+
+      public override void ExecuteResult(ControllerContext context)
+      {
+        OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
+      }
+    }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
