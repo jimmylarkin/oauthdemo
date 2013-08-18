@@ -24,6 +24,22 @@
           </button>
           @Html.ActionLink("Simple Website", "", "Home", null, new { @class = "brand" })
           <div class="nav-collapse collapse">
+            <ul class="nav pull-right">
+              @if (Request.IsAuthenticated)
+              {
+                <li>
+                    @{
+                string profileLink = "Hello, " + User.Identity.Name + "!";
+                    }
+                    @Html.ActionLink(profileLink, "Index", "Profile") 
+                </li>
+                <li>@Html.ActionLink("Log off", "Logoff", "Login")</li>
+              }
+              else
+              {
+                <li>@Html.ActionLink("Login", "Index", "Login")</li>
+              }
+            </ul>
           </div>
         </div>
       </div>

@@ -19,14 +19,14 @@ namespace JobDone.Controllers
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public ActionResult Login(LoginModel model, string returnUrl)
+    public ActionResult Index(LoginModel model, string returnUrl)
     {
       if (ModelState.IsValid)
       {
         using (DataContext db = new DataContext())
         {
-          UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase));
-          if (user.Password == model.Password)
+          UserProfile user = db.UserProfiles.FirstOrDefault(e => e.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase));
+          if (user != null && user.Password == model.Password)
           {
             FormsAuthentication.SetAuthCookie(model.UserName, false);
             if (Url.IsLocalUrl(returnUrl))
@@ -42,6 +42,12 @@ namespace JobDone.Controllers
       }
       ModelState.AddModelError("", "The user name or password provided is incorrect.");
       return View(model);
+    }
+
+    public ActionResult Logoff()
+    {
+      FormsAuthentication.SignOut();
+      return RedirectToAction("Index", "Home");
     }
   }
 }
