@@ -1,8 +1,8 @@
 using System.Web.Optimization;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(AuthorizationCodeFlow.BootstrapBundleConfig), "RegisterBundles")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(AuthorizationFlow.BootstrapBundleConfig), "RegisterBundles")]
 
-namespace AuthorizationCodeFlow
+namespace AuthorizationFlow
 {
 	public class BootstrapBundleConfig
 	{

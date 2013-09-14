@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationCodeFlow", "AuthorizationCodeFlow\AuthorizationCodeFlow.csproj", "{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationFlow", "AuthorizationFlow\AuthorizationFlow.csproj", "{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

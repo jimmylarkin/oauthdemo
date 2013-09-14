@@ -8,31 +8,36 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
-namespace AuthorizationCodeFlow.Controllers
+namespace AuthorizationFlow.Controllers
 {
   public class HomeController : Controller
   {
     public ActionResult Index()
     {
+      string implicitUrl = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=token&redirect_uri={2}",
+        "000000004810217E",
+        "wl.basic",
+        HttpUtility.UrlEncode("http://demo.my/Home/ImplicitResponse"));
+      ViewBag.ImplicitUrl = implicitUrl;
       return View();
     }
 
     [HttpPost]
-    public ActionResult Start()
+    public ActionResult StartAuthorizationCode()
     {
       string url = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=code&redirect_uri={2}",
         "000000004810217E",
         "wl.basic",
-        HttpUtility.UrlEncode("http://demo.my/Home/Response"));
+        HttpUtility.UrlEncode("http://demo.my/Home/AuthorizationCodeResponse"));
       return Redirect(url);
     }
 
-    public ActionResult Response(string code)
+    public ActionResult AuthorizationCodeResponse(string code)
     {
       WebClient client = new WebClient();
       NameValueCollection form = new NameValueCollection();
       form.Add("client_id", "000000004810217E");
-      form.Add("redirect_uri", "http://demo.my/Home/Response");
+      form.Add("redirect_uri", "http://demo.my/Home/AuthorizationCodeResponse");
       form.Add("client_secret", "ynlv5klzgQFjHy4sK3XXRdyYw-oA-Fev");
       form.Add("code", code);
       form.Add("grant_type", "authorization_code");
@@ -48,6 +53,11 @@ namespace AuthorizationCodeFlow.Controllers
       model.TokenResponse = response;
 
       return View(model);
+    }
+
+    public ActionResult ImplicitResponse()
+    {
+      return View();
     }
   }
 

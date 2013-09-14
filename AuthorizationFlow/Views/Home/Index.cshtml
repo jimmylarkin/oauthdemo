@@ -1,0 +1,26 @@
+﻿@{
+  ViewBag.Title = "Index";
+}
+
+<h2>OAuth 2.0 Authorization Flow Demo</h2>
+<p>Press the button to start OAuth 2.0 authorization code flow demo.</p>
+@using (Html.BeginForm("StartAuthorizationCode", "Home"))
+{
+  <button type="submit" class="btn btn-primary">Start Authorization Code Flow</button>
+}
+<p></p>
+<p>Press the button to start OAuth 2.0 authorization implicit flow demo.</p>
+<button type="submit" class="btn btn-primary" id="implicitBtn">Start Implicit Flow</button>
+
+<p></p>
+<p>Response details</p>
+<table class="table" id="implicitResponseResult">
+</table>
+
+@section scripts {
+  <script type="text/javascript">
+    $("#implicitBtn").click(function () {
+      window.open("@ViewBag.ImplicitUrl", "_blank", "height=550,width=500,status=no,toolbar=no,menubar=no,location=no");
+    })
+  </script>
+}
