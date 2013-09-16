@@ -52,12 +52,21 @@ namespace AuthorizationFlow.Controllers
       model.Code = code;
       model.TokenResponse = response;
 
+      Session["token"] = response.Token;
+
       return View(model);
     }
 
     public ActionResult ImplicitResponse()
     {
       return View();
+    }
+
+    [HttpPost]
+    public ActionResult ImplicitResponse(string token)
+    {
+      Session["token"] = token;
+      return new EmptyResult();
     }
   }
 

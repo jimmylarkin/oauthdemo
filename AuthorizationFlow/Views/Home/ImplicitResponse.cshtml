@@ -15,6 +15,9 @@
     response[parts[0]] = parts[1];
   }
 
+  var domDebugPanel = window.opener.document.getElementById("responseDebug");
+  var debugPanel = $(domTable).css("display", "block");
+
   var domTable = window.opener.document.getElementById("implicitResponseResult");
   var table = $(domTable);
   table.empty();
@@ -23,6 +26,8 @@
   table.append("<tr><th>Expires in:</th><td>" + response["expires_in"] + "</td></tr>");
   table.append("<tr><th>Scope:</th><td>" + response["scope"] + "</td></tr>");
   table.append("<tr><th>Token:</th><td><textarea style=\"width: 100%; height: 200px;\">" + response["access_token"] + "</textarea></td></tr>");
+
+  $.post(window.location, { token: response["access_token"] });
 
   window.close();
 </script>

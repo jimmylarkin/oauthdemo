@@ -12,10 +12,13 @@
 <p>Press the button to start OAuth 2.0 authorization implicit flow demo.</p>
 <button type="submit" class="btn btn-primary" id="implicitBtn">Start Implicit Flow</button>
 
-<p></p>
-<p>Response details</p>
-<table class="table" id="implicitResponseResult">
-</table>
+<div id="responseDebug" style="display: none">
+  <p></p>
+  <p>Response details</p>
+  <table class="table" id="implicitResponseResult">
+  </table>
+  <p></p>
+</div>
 
 @section scripts {
   <script type="text/javascript">
