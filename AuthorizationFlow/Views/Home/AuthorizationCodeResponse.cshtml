@@ -1,6 +1,6 @@
 ﻿@model AuthorizationFlow.Controllers.ResponseViewModel
 @{
-    ViewBag.Title = "Start";
+  ViewBag.Title = "Start";
 }
 
 <h2>Results</h2>
@@ -16,7 +16,8 @@
 <table class="table">
   <tr>
     <th>Raw response:</th>
-    <td><textarea style="width: 100%; height: 200px;">@Model.TokenResponse.RawResponse</textarea></td>
+    <td>
+      <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.RawResponse</textarea></td>
   </tr>
   <tr>
     <th>Token type:</th>
@@ -32,6 +33,8 @@
   </tr>
   <tr>
     <th>Token:</th>
-    <td><textarea style="width: 100%; height: 200px;">@Model.TokenResponse.Token</textarea></td>
+    <td>
+      <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.Token</textarea></td>
   </tr>
 </table>
+<p>@Html.ActionLink("Get user data", "UserData", "Home")</p>

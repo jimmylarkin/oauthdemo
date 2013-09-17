@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -16,7 +17,7 @@ namespace AuthorizationFlow.Controllers
     {
       string implicitUrl = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=token&redirect_uri={2}",
         "000000004810217E",
-        "wl.basic",
+        "wl.basic,wl.emails",
         HttpUtility.UrlEncode("http://demo.my/Home/ImplicitResponse"));
       ViewBag.ImplicitUrl = implicitUrl;
       return View();
@@ -27,7 +28,7 @@ namespace AuthorizationFlow.Controllers
     {
       string url = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=code&redirect_uri={2}",
         "000000004810217E",
-        "wl.basic",
+        "wl.basic,wl.emails",
         HttpUtility.UrlEncode("http://demo.my/Home/AuthorizationCodeResponse"));
       return Redirect(url);
     }
@@ -67,6 +68,15 @@ namespace AuthorizationFlow.Controllers
     {
       Session["token"] = token;
       return new EmptyResult();
+    }
+
+    public ActionResult UserData()
+    {
+      string token = (string)Session["token"];
+      WebClient client = new WebClient();
+      byte[] responseBytes = client.DownloadData("https://apis.live.net/v5.0/me?access_token=" + token);
+      ViewBag.Response = Encoding.ASCII.GetString(responseBytes);
+      return View();
     }
   }
 

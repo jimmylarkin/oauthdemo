@@ -238,6 +238,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\AuthorizationCodeResponse.cshtml" />
     <Content Include="Views\Home\ImplicitResponse.cshtml" />
+    <Content Include="Views\Home\UserData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
