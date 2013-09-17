@@ -17,7 +17,7 @@ namespace AuthorizationFlow.Controllers
     {
       string implicitUrl = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=token&redirect_uri={2}",
         "000000004810217E",
-        "wl.basic,wl.emails",
+        "wl.basic",
         HttpUtility.UrlEncode("http://demo.my/Home/ImplicitResponse"));
       ViewBag.ImplicitUrl = implicitUrl;
       return View();
@@ -28,7 +28,7 @@ namespace AuthorizationFlow.Controllers
     {
       string url = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=code&redirect_uri={2}",
         "000000004810217E",
-        "wl.basic,wl.emails",
+        "wl.basic",
         HttpUtility.UrlEncode("http://demo.my/Home/AuthorizationCodeResponse"));
       return Redirect(url);
     }
