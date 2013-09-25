@@ -1,0 +1,21 @@
+﻿@{
+  ViewBag.Title = "Index";
+}
+
+<h2>OAuth 2.0 Live ID scopes demo</h2>
+<p>Press the button to start demo with predefined scope.</p>
+@using (Html.BeginForm("BasicAndEmailScope", "Home"))
+{
+  <button type="submit" class="btn btn-primary">wl.basic + wl.emails scopes</button>
+}
+<p></p>
+@using (Html.BeginForm("SignInScope", "Home"))
+{
+  <button type="submit" class="btn btn-primary">wl.signin Scope</button>
+}
+<p></p>
+@using (Html.BeginForm("OfflineAccessScope", "Home"))
+{
+  <button type="submit" class="btn btn-primary">wl.offline_access scope</button>
+}
+<p></p>
