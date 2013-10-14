@@ -1,0 +1,13 @@
+﻿@{
+  ViewBag.Title = "DotNetOpenOuth Scopes";
+}
+<div class="row">
+  <div class="span12">
+    <h1>DotNetOpenOuth Client Scope Demo</h1>
+    <p>Press the button to start OAuth 2.0 authorization and get the user data.</p>
+    @using (Html.BeginForm("Login", "Home"))
+    {
+      <button type="submit" class="btn btn-primary">Get User Data</button>
+    }
+  </div>
+</div>
