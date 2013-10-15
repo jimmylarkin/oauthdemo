@@ -10,9 +10,10 @@ namespace ExtendingMicrosoftClientScope
   {
     public static void RegisterAuth()
     {
-      OAuthWebSecurity.RegisterMicrosoftClient(
-          clientId: "000000004810217E",
-          clientSecret: "ynlv5klzgQFjHy4sK3XXRdyYw-oA-Fev");
+      OAuthWebSecurity.RegisterClient(new MyMicrosoftClient("000000004810217E", "ynlv5klzgQFjHy4sK3XXRdyYw-oA-Fev", "wl.basic wl.emails"));
+      //OAuthWebSecurity.RegisterMicrosoftClient(
+      //    clientId: "000000004810217E",
+      //    clientSecret: "ynlv5klzgQFjHy4sK3XXRdyYw-oA-Fev");
     }
   }
 }
