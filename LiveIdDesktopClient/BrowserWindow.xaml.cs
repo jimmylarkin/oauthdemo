@@ -17,8 +17,7 @@ namespace LiveIdDesktopClient
   public partial class BrowserWindow : Window
   {
     static string scope = "wl.basic, wl.offline_access";
-    static string client_id = "000000004010B428";
-    static Uri signInUrl = new Uri(String.Format(@"https://login.live.com/oauth20_authorize.srf?client_id={0}&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope={1}", client_id, scope));
+    static Uri signInUrl = new Uri(String.Format(@"https://login.live.com/oauth20_authorize.srf?client_id={0}&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=code&scope={1}", App.ClientId, scope));
     MainWindow mainWindow;
 
     public BrowserWindow(MainWindow parent)

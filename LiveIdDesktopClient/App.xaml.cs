@@ -13,5 +13,7 @@ namespace LiveIdDesktopClient
   /// </summary>
   public partial class App : Application
   {
+    public static string ClientId = "000000004010B428";
+    public static string ClientSecret = "wj6BDdBBKhj81pdi7LMBsLzZHiuWyIwf";
   }
 }

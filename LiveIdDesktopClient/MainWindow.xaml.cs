@@ -16,91 +16,21 @@ using System.Web.Script.Serialization;
 using System.Net;
 using System.IO;
 using System.ComponentModel;
+using System.Collections.Specialized;
 
 namespace LiveIdDesktopClient
 {
-  public class ViewModel : INotifyPropertyChanged
-  {
-    private string accessToken;
-    private string refreshToken;
-    private BitmapImage image;
-    private string userData;
-
-    public string AccessToken
-    {
-      get
-      {
-        return accessToken;
-      }
-      set
-      {
-        accessToken = value;
-        RaisePropertyChanged("AccessToken");
-      }
-    }
-
-    public string RefreshToken
-    {
-      get
-      {
-        return refreshToken;
-      }
-      set
-      {
-        refreshToken = value;
-        RaisePropertyChanged("RefreshToken");
-      }
-    }
-    public string UserData
-    {
-      get
-      {
-        return userData;
-      }
-      set
-      {
-        userData = value;
-        RaisePropertyChanged("UserData");
-      }
-    }
-
-    public string AuthCode { get; set; }
-
-    public BitmapImage Image
-    {
-      get
-      {
-        return image;
-      }
-      set
-      {
-        image = value;
-        RaisePropertyChanged("Image");
-      }
-    }
-
-    private void RaisePropertyChanged(string propName)
-    {
-      if (PropertyChanged != null)
-        PropertyChanged(this, new PropertyChangedEventArgs(propName));
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-  }
-
   public partial class MainWindow : Window
   {
-    static string client_id = "000000004010B428";
-    static string client_secret = "wj6BDdBBKhj81pdi7LMBsLzZHiuWyIwf";
-    static string accessTokenUrl = String.Format(@"https://login.live.com/oauth20_token.srf?client_id={0}&client_secret={1}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code&code=", client_id, client_secret);
+    static string accessTokenUrl = String.Format(@"https://login.live.com/oauth20_token.srf?client_id={0}&client_secret={1}&redirect_uri=https://login.live.com/oauth20_desktop.srf&grant_type=authorization_code&code=", App.ClientId, App.ClientSecret);
     static string apiUrl = @"https://apis.live.net/v5.0/";
 
-    public ViewModel Model { get; set; }
+    public MainWindowViewModel Model { get; set; }
 
     public MainWindow()
     {
       InitializeComponent();
-      Model = new ViewModel();
+      Model = new MainWindowViewModel();
 
       var accessToken = ReadToken("access");
       var refreshToken = ReadToken("refresh");
@@ -113,6 +43,7 @@ namespace LiveIdDesktopClient
         Model.RefreshToken = refreshToken;
       }
       DataContext = Model;
+      TryGetUserInfo();
     }
 
     private void btnSignIn_Click(object sender, RoutedEventArgs e)
@@ -126,25 +57,6 @@ namespace LiveIdDesktopClient
     {
       GetAccessToken();
       GetUserInfo();
-    }
-
-    private void GetAccessToken()
-    {
-      if (!string.IsNullOrEmpty(Model.AuthCode))
-      {
-        WebClient wc = new WebClient();
-        string data = wc.DownloadString(new Uri(accessTokenUrl + Model.AuthCode));
-        Dictionary<string, string> tokenData = new Dictionary<string, string>();
-        tokenData = DeserializeJson(data);
-
-        string accessToken = tokenData["access_token"];
-        SaveToken("access", accessToken);
-        Model.AccessToken = accessToken;
-
-        string refreshToken = tokenData["refresh_token"];
-        SaveToken("refresh", refreshToken);
-        Model.RefreshToken = refreshToken;
-      }
     }
 
     private void SaveToken(string tokenName, string token)
@@ -169,16 +81,74 @@ namespace LiveIdDesktopClient
       return d;
     }
 
+    private void TryGetUserInfo()
+    {
+      try
+      {
+        GetUserInfo();
+      }
+      catch (WebException ex)
+      {
+        if (((System.Net.HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.Unauthorized)
+        {
+          RefreshToken();
+        }
+        GetUserInfo();
+      }
+    }
+
     private void GetUserInfo()
     {
       if (!string.IsNullOrEmpty(Model.AccessToken))
       {
-        WebClient wc = new WebClient();
-        Model.UserData = wc.DownloadString(new Uri(apiUrl + "me?access_token=" + Model.AccessToken));
+        WebClient client = new WebClient();
+        Model.UserData = client.DownloadString(new Uri(apiUrl + "me?access_token=" + Model.AccessToken));
         btnSignIn.Visibility = Visibility.Collapsed;
         string imgUrl = apiUrl + "me/picture?access_token=" + Model.AccessToken;
         Model.Image = new BitmapImage(new Uri(imgUrl, UriKind.RelativeOrAbsolute));
       }
+    }
+
+
+    private void GetAccessToken()
+    {
+      if (!string.IsNullOrEmpty(Model.AuthCode))
+      {
+        WebClient client = new WebClient();
+        string data = client.DownloadString(new Uri(accessTokenUrl + Model.AuthCode));
+        Dictionary<string, string> tokenData = new Dictionary<string, string>();
+        tokenData = DeserializeJson(data);
+        GetTokenFromResponse(tokenData);
+      }
+    }
+
+    private void RefreshToken()
+    {
+      WebClient client = new WebClient();
+      NameValueCollection form = new NameValueCollection();
+      form.Add("client_id", App.ClientId);
+      form.Add("redirect_uri", "http://demo.my/Home/AuthorizationCodeResponse");
+      form.Add("client_secret", App.ClientSecret);
+      form.Add("refresh_token", Model.RefreshToken);
+      form.Add("grant_type", "refresh_token");
+      client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+
+      Dictionary<string, string> tokenData = new Dictionary<string, string>();
+      byte[] responseBytes = client.UploadValues("https://login.live.com/oauth20_token.srf", "POST", form);
+      string data = Encoding.ASCII.GetString(responseBytes);
+      tokenData = DeserializeJson(data);
+      GetTokenFromResponse(tokenData);
+    }
+
+    private void GetTokenFromResponse(Dictionary<string, string> tokenData)
+    {
+      string accessToken = tokenData["access_token"];
+      SaveToken("access", accessToken);
+      Model.AccessToken = accessToken;
+
+      string refreshToken = tokenData["refresh_token"];
+      SaveToken("refresh", refreshToken);
+      Model.RefreshToken = refreshToken;
     }
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
