@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using AuthorizationFlow.Models;
 
 namespace AuthorizationFlow.Controllers
 {
@@ -15,7 +16,7 @@ namespace AuthorizationFlow.Controllers
   {
     public ActionResult Index()
     {
-      string implicitUrl = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=token&redirect_uri={2}",
+      string implicitUrl = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=token&redirect_uri={2}&state=12345testme",
         "000000004810217E",
         "wl.basic",
         HttpUtility.UrlEncode("http://demo.my/Home/ImplicitResponse"));
@@ -26,7 +27,7 @@ namespace AuthorizationFlow.Controllers
     [HttpPost]
     public ActionResult StartAuthorizationCode()
     {
-      string url = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=code&redirect_uri={2}",
+        string url = string.Format("https://login.live.com/oauth20_authorize.srf?client_id={0}&scope={1}&response_type=code&redirect_uri={2}&state=12345testme",
         "000000004810217E",
         "wl.basic",
         HttpUtility.UrlEncode("http://demo.my/Home/AuthorizationCodeResponse"));
@@ -78,29 +79,5 @@ namespace AuthorizationFlow.Controllers
       ViewBag.Response = Encoding.ASCII.GetString(responseBytes);
       return View();
     }
-  }
-
-  public class OAuthTokenResponse
-  {
-    [JsonIgnore]
-    public string RawResponse { get; set; }
-
-    [JsonProperty("token_type")]
-    public string TokenType { get; set; }
-
-    [JsonProperty("scope")]
-    public string Scope { get; set; }
-
-    [JsonProperty("access_token")]
-    public string Token { get; set; }
-
-    [JsonProperty("expires_in")]
-    public int Expiry { get; set; }
-  }
-
-  public class ResponseViewModel
-  {
-    public string Code { get; set; }
-    public OAuthTokenResponse TokenResponse { get; set; }
   }
 }

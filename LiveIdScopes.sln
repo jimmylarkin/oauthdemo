@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveIdScopes", "LiveIdScopes\LiveIdScopes.csproj", "{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveIdOfflineClient", "LiveIdOfflineClient\LiveIdOfflineClient.csproj", "{3D4A4A93-BF85-4E22-BFA3-150D3C339B42}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,10 +13,6 @@ Global
 		{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0854C6A7-31FB-46D9-9BE1-874DA5F3EDEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D4A4A93-BF85-4E22-BFA3-150D3C339B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D4A4A93-BF85-4E22-BFA3-150D3C339B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D4A4A93-BF85-4E22-BFA3-150D3C339B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D4A4A93-BF85-4E22-BFA3-150D3C339B42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

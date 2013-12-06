@@ -1,0 +1,24 @@
+﻿@model DotNetOpenAuth.AspNet.AuthenticationResult
+
+@{
+  ViewBag.Title = "ShowData";
+}
+
+<h2>Data received</h2>
+<table class="table">
+  <tr>
+    <td>ProviderUserId</td>
+    <td>@Model.ProviderUserId</td>
+  </tr>
+  <tr>
+    <td>ProviderUserId</td>
+    <td>@Model.UserName</td>
+  </tr>
+@foreach(var kvp in Model.ExtraData)
+{
+  <tr>
+    <td>ExtraData["@kvp.Key"]</td>
+    <td>@(kvp.Value.Length > 100 ? kvp.Value.Substring(0, 100) + "..." : kvp.Value)</td>
+  </tr>
+}
+</table>

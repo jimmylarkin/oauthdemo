@@ -49,8 +49,6 @@ namespace ExtendingMicrosoftClientScope
         );
       WebRequest request = WebRequest.Create(builder.Uri.AbsoluteUri);
       request.Method = "GET";
-      //try
-      //{
       HttpWebResponse response = (HttpWebResponse)request.GetResponse();
       if (response.StatusCode == HttpStatusCode.OK)
       {
@@ -64,14 +62,6 @@ namespace ExtendingMicrosoftClientScope
           }
         }
       }
-      //}
-      //catch (WebException ex)
-      //{
-      //  Stream st = ex.Response.GetResponseStream();
-      //  byte[] buf = new byte[st.Length];
-      //  st.Read(buf, 0, (int)st.Length);
-      //  string resposne = Encoding.UTF8.GetString(buf);
-      //}
       return null;
     }
 

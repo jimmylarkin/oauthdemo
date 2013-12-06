@@ -4,6 +4,7 @@
 }
 
 <h2>Results</h2>
+<p>@Html.ActionLink("Get user data", "UserData", "Home", new { @class = "btn btn-primary" })</p>
 <h3>Step 1: Get authorization code returned</h3>
 <table class="table">
   <tr>
@@ -42,4 +43,3 @@
       <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.RefreshToken</textarea></td>
   </tr>
 </table>
-<p>@Html.ActionLink("Get user data", "UserData", "Home")</p>

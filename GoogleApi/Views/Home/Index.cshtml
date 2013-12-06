@@ -1,0 +1,11 @@
+﻿@{
+  ViewBag.Title = "Index";
+}
+
+<h2>OAuth 2.0 Google scopes demo</h2>
+<p>Press the button to start demo with predefined scope.</p>
+@using (Html.BeginForm("Login", "Home"))
+{
+  <button type="submit" class="btn btn-primary">Log In</button>
+}
+<p></p>

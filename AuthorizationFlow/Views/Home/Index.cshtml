@@ -23,7 +23,7 @@
 @section scripts {
   <script type="text/javascript">
     $("#implicitBtn").click(function () {
-      window.open("@ViewBag.ImplicitUrl", "_blank", "height=550,width=500,status=no,toolbar=no,menubar=no,location=no");
+      window.open("@Html.Raw(ViewBag.ImplicitUrl)", "_blank", "height=550,width=500,status=no,toolbar=no,menubar=no,location=no");
     })
   </script>
 }

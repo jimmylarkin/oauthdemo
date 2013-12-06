@@ -1,0 +1,45 @@
+﻿@model GoogleApi.Controllers.ResponseViewModel
+@{
+  ViewBag.Title = "Start";
+}
+
+<h2>Results</h2>
+<p>@Html.ActionLink("Get user data", "UserData", "Home", new { @class = "btn btn-primary" })</p>
+<h3>Step 1: Get authorization code returned</h3>
+<table class="table">
+  <tr>
+    <th>Authorization Code:</th>
+    <td>@Model.Code</td>
+  </tr>
+</table>
+
+<h3>Step 2: Get token request</h3>
+<table class="table">
+  <tr>
+    <th>Raw response:</th>
+    <td>
+      <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.RawResponse</textarea></td>
+  </tr>
+  <tr>
+    <th>Token type:</th>
+    <td>@Model.TokenResponse.TokenType</td>
+  </tr>
+  <tr>
+    <th>Expires in:</th>
+    <td>@Model.TokenResponse.Expiry</td>
+  </tr>
+  <tr>
+    <th>Scope:</th>
+    <td>@Model.TokenResponse.Scope</td>
+  </tr>
+  <tr>
+    <th>Token:</th>
+    <td>
+      <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.Token</textarea></td>
+  </tr>
+  <tr>
+    <th>Refresh token:</th>
+    <td>
+      <textarea style="width: 100%; height: 200px;">@Model.TokenResponse.RefreshToken</textarea></td>
+  </tr>
+</table>

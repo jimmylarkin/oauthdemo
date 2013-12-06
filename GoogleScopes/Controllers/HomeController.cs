@@ -21,9 +21,9 @@ namespace GoogleScopes.Controllers
     [HttpPost]
     public ActionResult UserinfoProfileScope()
     {
-      string url = string.Format("https://accounts.google.com/o/oauth2/auth?client_id={0}&scope={1}&response_type=code&redirect_uri={2}",
+      string url = string.Format("https://accounts.google.com/o/oauth2/auth?client_id={0}&scope={1}&response_type=code&redirect_uri={2}&state=testme0019991",
           "71806529788.apps.googleusercontent.com",
-          "https://www.googleapis.com/auth/userinfo.profile",
+          "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
           HttpUtility.UrlEncode("http://demo.my/Home/AuthorizationCodeResponse"));
       return Redirect(url);
     }
