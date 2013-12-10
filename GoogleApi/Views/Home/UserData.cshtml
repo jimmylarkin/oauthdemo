@@ -1,0 +1,32 @@
+﻿@model Google.Apis.Oauth2.v1.Data.Userinfo
+@{
+    ViewBag.Title = "User Data";
+}
+
+<h2>User data</h2>
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>Gender</th>
+        <td>@Model.Gender</td>
+    </tr>
+    <tr>
+        <th>ID</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Link</th>
+        <td>@Model.Link</td>
+    </tr>
+    <tr>
+        <th>Locale</th>
+        <td>@Model.Locale</td>
+    </tr>
+</table>

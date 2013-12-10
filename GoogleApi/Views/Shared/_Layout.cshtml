@@ -1,8 +1,6 @@
-﻿@using StackExchange.Profiling;
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    @this.InitClientTimings()
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
@@ -18,6 +16,5 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    @MiniProfiler.RenderIncludes()
 </body>
 </html>

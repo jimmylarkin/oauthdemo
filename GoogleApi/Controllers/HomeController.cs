@@ -24,7 +24,7 @@ namespace GoogleApi.Controllers
             return View();
         }
 
-        public async Task<ActionResult> LoginAsync(CancellationToken cancellationToken)
+        public async Task<ActionResult> UserDataAsync(CancellationToken cancellationToken)
         {
             var result = await new AuthorizationCodeMvcApp(this, new AppFlowMetadata()).AuthorizeAsync(cancellationToken);
 
@@ -38,7 +38,7 @@ namespace GoogleApi.Controllers
 
                 var profileRequest = service.Userinfo.V2.Me.Get();
                 var profile = profileRequest.Execute();
-                return View();
+                return View(profile);
             }
             else
             {
