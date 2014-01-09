@@ -46,12 +46,4 @@ namespace GoogleApi.Controllers
             }
         }
     }
-
-    public class AuthCallbackController : Google.Apis.Auth.OAuth2.Mvc.Controllers.AuthCallbackController
-    {
-        protected override FlowMetadata FlowData
-        {
-            get { return new AppFlowMetadata(); }
-        }
-    }
 }

@@ -37,7 +37,6 @@ namespace LiveIdScopes.Models
                 controller.Session["user"] = user;
             }
             return user.ToString();
-
         }
 
         public override IAuthorizationCodeFlow Flow

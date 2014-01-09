@@ -26,6 +26,8 @@ namespace GoogleApiDesktopClient
     private BitmapImage image;
     private string userData;
 
+    public bool IsOutOfBrowserMode { get; set; }
+
     public string AccessToken
     {
       get

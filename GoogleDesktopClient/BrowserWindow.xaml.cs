@@ -17,13 +17,13 @@ namespace GoogleApiDesktopClient
     public partial class BrowserWindow : Window
     {
         private bool isInOobMode;
-        static string scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
+        static string scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.login";
         MainWindow mainWindow;
 
-        public BrowserWindow(MainWindow parent, bool inOobMode)
+        public BrowserWindow(MainWindow parent)
         {
-            isInOobMode = inOobMode;
             mainWindow = parent;
+            isInOobMode = mainWindow.Model.IsOutOfBrowserMode;
             InitializeComponent();
             string redirectUri = "http://localhost";
             if (isInOobMode)
@@ -42,13 +42,13 @@ namespace GoogleApiDesktopClient
         {
             if (isInOobMode)
             {
-                //dynamic doc = webBrowser.Document;
-                //if (doc.Title.Contains("code="))
-                //{
-                //    string auth_code = Regex.Split(doc.Title, "code=")[1];
-                //    mainWindow.Model.AuthCode = auth_code;
-                //    this.Close();
-                //}
+                dynamic doc = webBrowser.Document;
+                if (doc.Title.Contains("code="))
+                {
+                    string auth_code = Regex.Split(doc.Title, "code=")[1];
+                    mainWindow.Model.AuthCode = auth_code;
+                    this.Close();
+                }
             }
             else
             {
