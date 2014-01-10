@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace GoogleApiDesktopClient
 {
@@ -45,7 +46,8 @@ namespace GoogleApiDesktopClient
                 dynamic doc = webBrowser.Document;
                 if (doc.Title.Contains("code="))
                 {
-                    string auth_code = Regex.Split(doc.Title, "code=")[1];
+                    var elements = HttpUtility.ParseQueryString(e.Uri.Query);
+                    string auth_code = elements["code"];
                     mainWindow.Model.AuthCode = auth_code;
                     this.Close();
                 }
@@ -54,7 +56,8 @@ namespace GoogleApiDesktopClient
             {
                 if (e.Uri.AbsoluteUri.Contains("code="))
                 {
-                    string auth_code = Regex.Split(e.Uri.AbsoluteUri, "code=")[1];
+                    var elements = HttpUtility.ParseQueryString(e.Uri.Query);
+                    string auth_code = elements["code"];
                     mainWindow.Model.AuthCode = auth_code;
                     this.Close();
                 }

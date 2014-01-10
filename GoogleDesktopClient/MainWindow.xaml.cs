@@ -146,6 +146,7 @@ namespace GoogleApiDesktopClient
                 Model.UserData = client.DownloadString(new Uri("https://www.googleapis.com/plus/v1/people/me?access_token=" + Model.AccessToken));
                 btnSignInCustom.Visibility = Visibility.Collapsed;
                 btnSignInApi.Visibility = Visibility.Collapsed;
+
                 var jss = new JavaScriptSerializer();
                 dynamic userData = jss.Deserialize<dynamic>(Model.UserData);
                 var userDataDictionary = userData as Dictionary<string, object>;
@@ -160,20 +161,32 @@ namespace GoogleApiDesktopClient
         {
             if (!string.IsNullOrEmpty(Model.AuthCode))
             {
-                WebClient client = new WebClient();
-                NameValueCollection form = new NameValueCollection();
-                form.Add("client_id", App.ClientId);
-                form.Add("redirect_uri", Model.IsOutOfBrowserMode ? "urn:ietf:wg:oauth:2.0:oob" : "http://localhost");
-                form.Add("client_secret", App.ClientSecret);
-                form.Add("code", Model.AuthCode);
-                form.Add("grant_type", "authorization_code");
-                client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+                try
+                {
+                    WebClient client = new WebClient();
+                    NameValueCollection form = new NameValueCollection();
+                    form.Add("client_id", App.ClientId);
+                    form.Add("redirect_uri", Model.IsOutOfBrowserMode ? "urn:ietf:wg:oauth:2.0:oob" : "http://localhost");
+                    form.Add("client_secret", App.ClientSecret);
+                    form.Add("code", Model.AuthCode);
+                    form.Add("grant_type", "authorization_code");
+                    client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
 
-                Dictionary<string, string> tokenData = new Dictionary<string, string>();
-                byte[] responseBytes = client.UploadValues("https://accounts.google.com/o/oauth2/token", "POST", form);
-                string data = Encoding.ASCII.GetString(responseBytes);
-                tokenData = DeserializeJson(data);
-                GetTokenFromResponse(tokenData);
+                    Dictionary<string, string> tokenData = new Dictionary<string, string>();
+                    byte[] responseBytes = client.UploadValues("https://accounts.google.com/o/oauth2/token", "POST", form);
+                    string data = Encoding.ASCII.GetString(responseBytes);
+                    tokenData = DeserializeJson(data);
+                    GetTokenFromResponse(tokenData);
+                }
+                catch (Exception ex)
+                {
+                    var stream = ((System.Net.WebException)(ex)).Response.GetResponseStream();
+                    byte[] buffer = new byte[stream.Length];
+                    stream.Read(buffer, 0, (int)stream.Length);
+                    string response = Encoding.UTF8.GetString(buffer);
+                    MessageBox.Show("Error: " + response);
+                    throw;                    
+                }
             }
         }
 
