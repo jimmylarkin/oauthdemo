@@ -27,12 +27,7 @@ namespace GoogleApiDesktopClient
             isInOobMode = mainWindow.Model.IsOutOfBrowserMode;
             InitializeComponent();
             string redirectUri = "http://localhost";
-            if (isInOobMode)
-            {
-                redirectUri = "urn:ietf:wg:oauth:2.0:oob";
-            }
-
-            Uri signInUrl = new Uri(String.Format(@"https://accounts.google.com/o/oauth2/auth?client_id={0}&redirect_uri={1}&scope={2}&response_type=code", 
+            Uri signInUrl = new Uri(String.Format(@"https://accounts.google.com/o/oauth2/auth?client_id={0}&redirect_uri={1}&scope={2}&response_type=code",
                 App.ClientId,
                 redirectUri,
                 scope));
@@ -41,26 +36,12 @@ namespace GoogleApiDesktopClient
 
         private void webBrowser_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
-            if (isInOobMode)
+            if (e.Uri.AbsoluteUri.Contains("code="))
             {
-                dynamic doc = webBrowser.Document;
-                if (doc.Title.Contains("code="))
-                {
-                    var elements = HttpUtility.ParseQueryString(e.Uri.Query);
-                    string auth_code = elements["code"];
-                    mainWindow.Model.AuthCode = auth_code;
-                    this.Close();
-                }
-            }
-            else
-            {
-                if (e.Uri.AbsoluteUri.Contains("code="))
-                {
-                    var elements = HttpUtility.ParseQueryString(e.Uri.Query);
-                    string auth_code = elements["code"];
-                    mainWindow.Model.AuthCode = auth_code;
-                    this.Close();
-                }
+                var elements = HttpUtility.ParseQueryString(e.Uri.Query);
+                string auth_code = elements["code"];
+                mainWindow.Model.AuthCode = auth_code;
+                this.Close();
             }
         }
     }

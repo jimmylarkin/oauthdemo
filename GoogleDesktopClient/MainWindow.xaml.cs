@@ -51,16 +51,36 @@ namespace GoogleApiDesktopClient
         {
             Model.IsOutOfBrowserMode = false;
             BrowserWindow browser = new BrowserWindow(this);
-            browser.Closed += new EventHandler(browser_Closed);
-            browser.Show();
+            browser.Closed += new EventHandler(DialogWindowClosed);
+            browser.ShowDialog();
         }
 
         private void btnSignInCustomOob_Click(object sender, RoutedEventArgs e)
         {
+            string scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.login";
+            string redirectUri = "urn:ietf:wg:oauth:2.0:oob";
+            Uri signInUrl = new Uri(String.Format(@"https://accounts.google.com/o/oauth2/auth?client_id={0}&redirect_uri={1}&scope={2}&response_type=code",
+                App.ClientId,
+                redirectUri,
+                scope));
+
+            System.Diagnostics.Process.Start("iexplore.exe", signInUrl.AbsoluteUri);
             Model.IsOutOfBrowserMode = true;
-            BrowserWindow browser = new BrowserWindow(this);
-            browser.Closed += new EventHandler(browser_Closed);
-            browser.Show();
+        }
+
+        private void UseCodeClick(object sender, RoutedEventArgs e)
+        {
+            Model.AuthCode = CodeTextBox.Text;
+            GetAccessToken();
+            GetUserInfo();
+            CodeTextBox.Text = "";
+        }
+
+        private void deviceSignIn_Click(object sender, RoutedEventArgs e)
+        {
+            DeviceWindow deviceWindow = new DeviceWindow(this);
+            deviceWindow.Closed += new EventHandler(DialogWindowClosed);
+            deviceWindow.ShowDialog();
         }
 
         private void btnSignInApi_Click(object sender, RoutedEventArgs e)
@@ -94,7 +114,7 @@ namespace GoogleApiDesktopClient
             return task;
         }
 
-        void browser_Closed(object sender, EventArgs e)
+        void DialogWindowClosed(object sender, EventArgs e)
         {
             GetAccessToken();
             GetUserInfo();
@@ -115,7 +135,7 @@ namespace GoogleApiDesktopClient
             return null;
         }
 
-        private Dictionary<string, string> DeserializeJson(string json)
+        public static Dictionary<string, string> DeserializeJson(string json)
         {
             var jss = new JavaScriptSerializer();
             var d = jss.Deserialize<Dictionary<string, string>>(json);
@@ -144,8 +164,7 @@ namespace GoogleApiDesktopClient
             {
                 WebClient client = new WebClient();
                 Model.UserData = client.DownloadString(new Uri("https://www.googleapis.com/plus/v1/people/me?access_token=" + Model.AccessToken));
-                btnSignInCustom.Visibility = Visibility.Collapsed;
-                btnSignInApi.Visibility = Visibility.Collapsed;
+                buttonsPanel.Visibility = Visibility.Collapsed;
 
                 var jss = new JavaScriptSerializer();
                 dynamic userData = jss.Deserialize<dynamic>(Model.UserData);
@@ -185,30 +204,39 @@ namespace GoogleApiDesktopClient
                     stream.Read(buffer, 0, (int)stream.Length);
                     string response = Encoding.UTF8.GetString(buffer);
                     MessageBox.Show("Error: " + response);
-                    throw;                    
                 }
             }
         }
 
         private void RefreshToken()
         {
-            WebClient client = new WebClient();
-            NameValueCollection form = new NameValueCollection();
-            form.Add("client_id", App.ClientId);
-            form.Add("redirect_uri", "http://demo.my/Home/AuthorizationCodeResponse");
-            form.Add("client_secret", App.ClientSecret);
-            form.Add("refresh_token", Model.RefreshToken);
-            form.Add("grant_type", "refresh_token");
-            client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            try
+            {
+                WebClient client = new WebClient();
+                NameValueCollection form = new NameValueCollection();
+                form.Add("client_id", App.ClientId);
+                form.Add("client_secret", App.ClientSecret);
+                form.Add("refresh_token", Model.RefreshToken);
+                form.Add("grant_type", "refresh_token");
+                client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
 
-            Dictionary<string, string> tokenData = new Dictionary<string, string>();
-            byte[] responseBytes = client.UploadValues("https://login.live.com/oauth20_token.srf", "POST", form);
-            string data = Encoding.ASCII.GetString(responseBytes);
-            tokenData = DeserializeJson(data);
-            GetTokenFromResponse(tokenData);
+                Dictionary<string, string> tokenData = new Dictionary<string, string>();
+                byte[] responseBytes = client.UploadValues("https://accounts.google.com/o/oauth2/token", "POST", form);
+                string data = Encoding.ASCII.GetString(responseBytes);
+                tokenData = DeserializeJson(data);
+                GetTokenFromResponse(tokenData);
+            }
+            catch (Exception ex)
+            {
+                var stream = ((System.Net.WebException)(ex)).Response.GetResponseStream();
+                byte[] buffer = new byte[stream.Length];
+                stream.Read(buffer, 0, (int)stream.Length);
+                string response = Encoding.UTF8.GetString(buffer);
+                MessageBox.Show("Unable to refresh the token: " + response);
+            }
         }
 
-        private void GetTokenFromResponse(Dictionary<string, string> tokenData)
+        public void GetTokenFromResponse(Dictionary<string, string> tokenData)
         {
             string accessToken = tokenData["access_token"];
             SaveToken("access", accessToken);
@@ -223,5 +251,6 @@ namespace GoogleApiDesktopClient
         {
             Application.Current.Shutdown();
         }
+
     }
 }
